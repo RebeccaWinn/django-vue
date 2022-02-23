@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'posts.apps.PostsConfig',
+    'calendar_events.apps.CalendarEventsConfig',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,19 +45,19 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
-    'djoser'
+    'djoser',
     
 ]
 
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    )
-}
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'rest_framework.authentication.TokenAuthentication',
+#     ),
+#     'DEFAULT_PERMISSION_CLASSES': (
+#         'rest_framework.permissions.IsAuthenticated',
+#     )
+# }
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
@@ -146,9 +147,9 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-CRISPY_TEMPLATE_PACK ='bootstrap4'
-LOGIN_REDIRECT_URL = 'social_page'
-LOGIN_URL = 'login'
+# CRISPY_TEMPLATE_PACK ='bootstrap4'
+# LOGIN_REDIRECT_URL = 'social_page'
+# LOGIN_URL = 'login'
 
 
 # Default primary key field type
