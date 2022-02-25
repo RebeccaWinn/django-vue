@@ -1,6 +1,6 @@
 <template>
-    <v-container style="padding-top:50px"> 
-        <v-row>
+    <v-container > 
+        <v-row style="margin-top:300px">
         <v-col
             v-for="n in 24"
             :key="n"

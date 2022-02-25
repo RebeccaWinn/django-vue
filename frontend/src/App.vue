@@ -39,7 +39,7 @@
         </v-container>
       </v-app-bar>
     <v-img src="./assets/gym.jpg">
-
+    
     <router-view>
     </router-view>
  

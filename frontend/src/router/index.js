@@ -29,7 +29,7 @@ const routes = [
   },  
   {
     path: '/social',
-    name: 'Soical',
+    name: 'Social',
     component: () => import('../views/Social.vue')
   },
   {
