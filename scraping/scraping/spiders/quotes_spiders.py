@@ -17,3 +17,26 @@ class QuotesSpider(scrapy.Spider):
         with open(filename, 'wb') as f:
             f.write(response.body)
         self.log(f'Saved file {filename}')
+        
+        
+        # https://www.self.com/fitness/workouts
+       # https://lifehacker.com/health/fitness
+       #https://www.muscleandfitness.com/workout-routines/
+       #https://www.muscleandfitness.com/workouts/workout-tips/
+       #https://www.bodybuilding.com/recipes
+      # https://healthyfitnessmeals.com/blog/
+       #https://www.muscleandstrength.com/workout-routines
+class FitnessWorkoutSpider(scrapy.Spider):
+    name = "workouts"
+    def start_requests(self):
+        urls = [
+            'https://www.muscleandfitness.com/workout-routines/',
+        ]
+        for url in urls:
+            yield scrapy.Request(url=url, callback=self.parse)
+            
+            
+
+           
+
+       

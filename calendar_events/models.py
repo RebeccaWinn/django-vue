@@ -4,12 +4,12 @@ from django.urls import reverse
 
 
 
+
 class CalendarEvents(models.Model):
     name = models.CharField(max_length=255)
-    start = models.DateTimeField()
-    end = models.DateTimeField()
-    color = models.CharField(max_length=255)
-    timed = models.DateTimeField()
+    start = models.CharField(max_length=255)
+    end = models.CharField(max_length=255)
+
     
     def __str__(self):
         return self.name 

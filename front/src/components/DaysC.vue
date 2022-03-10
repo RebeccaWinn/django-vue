@@ -16,7 +16,7 @@
                     v-bind="attrs"
                     v-on="on"
                     >
-                    Open Dialog
+                    Add Workout
                     </v-btn>
                 </template>
                 <v-card>
@@ -38,7 +38,7 @@
                         <v-col cols="12">
                             <v-text-field
                             label="day*"
-                            v-model="start"
+                            v-model="new_start"
                             required
                             ></v-text-field>
                         </v-col>
@@ -63,10 +63,17 @@
                     >
                         Close
                     </v-btn>
-                    <v-btn
+                    <v-btn v-if="update==true"
                         color="blue darken-1"
                         text
-                        @click="updateRange(); dialog = false;"
+                        @click="updateWorkout(selectedEvent.id);dialog = false; update=false;"
+                    >
+                        Save
+                    </v-btn>
+                    <v-btn v-if="update==false"
+                        color="blue darken-1"
+                        text
+                        @click="addWorkout();dialog = false;"
                     >
                         Save
                     </v-btn>
@@ -192,7 +199,7 @@
                     @click:event="showEvent"
                     @click:more="viewDay"
                     @click:date="viewDay"
-                    @change="updateRange"
+                    @change="getEvents"
                 ></v-calendar>
                 <v-menu
                     v-model="selectedOpen"
@@ -209,7 +216,10 @@
                         :color="selectedEvent.color"
                         dark
                     >
-                        <v-btn icon>
+                        <v-btn icon
+                            @click= "update= true; dialog = true"
+                         >
+
                         <v-icon>mdi-pencil</v-icon>
                         </v-btn>
                         <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
@@ -218,7 +228,7 @@
                         <v-icon>mdi-heart</v-icon>
                         </v-btn>
                         <v-btn icon>
-                        <v-icon>mdi-dots-vertical</v-icon>
+                        <v-icon @click="deleteWorkout(selectedEvent.id); selectedOpen = false;">mdi-delete</v-icon>
                         </v-btn>
                     </v-toolbar>
                     <v-card-text>
@@ -245,87 +255,140 @@
 </template>
 
 <script>
-  export default {
-    name:'DaysCalendar',
-    data: () => ({
-      drawer: null,
-        page:'Calendar',
-        focus: '',
-        type: 'month',
-        typeToLabel: {
-            month: 'Month',
-            week: 'Week',
-            day: 'Day',
-            '4day': '4 Days',
+    import{ getAPI } from '../axios-api'
+    export default {
+        name:'DaysCalendar',
+        data: () => ({
+            APIData:[],
+            drawer: null,
+            update:false,
+            page:'Calendar',
+            focus: '',
+            type: 'month',
+            typeToLabel: {
+                month: 'Month',
+                week: 'Week',
+                day: 'Day',
+                '4day': '4 Days',
+            },
+            selectedEvent: {},
+            selectedElement: null,
+            selectedOpen: false,
+            events: [],
+            colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
+            names: ['Shoulders', 'Biceps/Triceps', 'Back', 'Chest', 'Glutes', 'Quads', 'Cardio'],  
+            workout: "",
+            new_start: "",
+            reminder:"reminder",
+            dialog:false
+        }),
+    
+        mounted () {
+            this.$refs.calendar.checkChange()
+            this.getEvents()
         },
-        selectedEvent: {},
-        selectedElement: null,
-        selectedOpen: false,
-        events: [],
-        colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
-        names: ['Shoulders', 'Biceps/Triceps', 'Back', 'Chest', 'Glutes', 'Quads', 'Cardio'],  
-        workout: "",
-        start: "",
-        reminder:"reminder",
-        dialog:false
-    }),
-  
-    mounted () {
-        this.$refs.calendar.checkChange()
-    },
 
-    methods: {
-        viewDay ({ date }) {
-            this.focus = date
-            this.type = 'day'
+        created(){
+            this.getEvents()
         },
-        getEventColor (event) {
-            return event.color
-        },
-        setToday () {
-            this.focus = ''
-        },
-        prev () {
-            this.$refs.calendar.prev()
-        },
-        next () {
-            this.$refs.calendar.next()
-        },
-        showEvent ({ nativeEvent, event }) {
-            const open = () => {
-            this.selectedEvent = event
-            this.selectedElement = nativeEvent.target
-            requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = true))
-            }
 
-            if (this.selectedOpen) {
-            this.selectedOpen = false
-            requestAnimationFrame(() => requestAnimationFrame(() => open()))
-            } else {
-            open()
-            }
+        methods: {
+            viewDay ({ date }) {
+                this.focus = date
+                this.type = 'day'
+            },
+            getEvents(){
+                const events = []
+                getAPI.get('/events/')
+                .then(response => {
+                    console.log('Calendar Events Api has recieved data')
+                    this.APIData = response.data
+                    console.log(this.APIData)
+                    for (let i = 0; i < this.APIData.data.length; i++) {
+                        const start_time = this.APIData.data[i].start.replace('T', ' ');
+                        const end_time = this.APIData.data[i].end.replace('T', ' ');
+                        events.push({
+                            id:this.APIData.data[i].id,
+                            name: this.APIData.data[i].name,
+                            start: new Date(start_time),
+                            end: new Date(end_time),
+                            color: this.colors[this.rnd(0, this.colors.length - 1)],
+                        })
+                    }
+                this.events = events
 
-            nativeEvent.stopPropagation()
-        },
-        updateRange () {
-            const event_count = this.events
-                event_count.push({
-                    name: this.workout,
-                    start: new Date(this.start),
-                    end: new Date(this.start),
-                    color: this.colors[this.rnd(0, this.colors.length - 1)],
-                    reminder:this.reminder
                 })
-                this.workout = ""
-                this.start = ""
-                this.reminder = ""
-                this.events = event_count
-            
+                .catch(error => {
+                    console.log(error)
+                })
+            },
+            getEventColor (event) {
+                return event.color
+            },
+            setToday () {
+                this.focus = ''
+            },
+            prev () {
+                this.$refs.calendar.prev()
+            },
+            next () {
+                this.$refs.calendar.next()
+            },
+            showEvent ({ nativeEvent, event }) {
+                const open = () => {
+                this.selectedEvent = event
+                this.selectedElement = nativeEvent.target
+                requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = true))
+                }
 
+                if (this.selectedOpen) {
+                this.selectedOpen = false
+                requestAnimationFrame(() => requestAnimationFrame(() => open()))
+                } else {
+                open()
+                }
+
+                nativeEvent.stopPropagation()
+            },
+            addWorkout (){
+                getAPI.post('/events/',{
+                    name: this.workout,
+                    start: this.new_start,
+                    end: this.new_start,
+                }).then(response => {
+                    this.getEvents()
+                    console.log(response)
+                    console.log(this.new_start)
+                }).catch(error => {
+                    console.log(error)
+                })
+            },
+            deleteWorkout(id){
+                getAPI.delete('/events/'+id)
+                    .then(response => {
+                        console.log(response);
+                    })
+                    .catch(function (error) {
+                        console.log(error.response)
+                    })
+                this.getEvents();
+            },
+            updateWorkout(id){
+                getAPI.patch('/events/'+id,{
+                    name: this.workout,
+                    start: this.new_start,
+                    end: this.new_start,
+                }).then(response => {
+                    console.log(id)
+                    console.log(response);
+                }).catch(function (error) {
+                    console.log(error.response)
+                })
+                this.getEvents();
+            },
+            rnd (a, b) {
+                return Math.floor((b - a + 1) * Math.random()) + a
+            },
         },
-        rnd (a, b) {
-            return Math.floor((b - a + 1) * Math.random()) + a
-        },
-    },
-  }
+    }
 </script>
