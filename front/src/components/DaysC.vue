@@ -66,7 +66,7 @@
                     <v-btn v-if="update==true"
                         color="blue darken-1"
                         text
-                        @click="updateWorkout(selectedEvent.id);dialog = false; update=false;"
+                        @click="updateWorkout(selectedEvent.id);dialog = false; update=false; workout='';"
                     >
                         Save
                     </v-btn>
@@ -217,7 +217,7 @@
                         dark
                     >
                         <v-btn icon
-                            @click= "update= true; dialog = true"
+                            @click= "workout=selectedEvent.name;update= true; dialog = true;"
                          >
 
                         <v-icon>mdi-pencil</v-icon>

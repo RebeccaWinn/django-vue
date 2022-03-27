@@ -4,9 +4,21 @@ from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import status
-from . models import CalendarEvents, Reminders
-from . serializers import EventSerializer, ReminderSerializer
+from . models import CalendarEvents, Reminders,ScrapingItem
+from . serializers import EventSerializer, ReminderSerializer, ScrapingSerializer
 
+
+
+class ScrapingView(generics.RetrieveAPIView):
+    queryset = ScrapingItem.objects.all()
+    def get(self, request,id=None):
+            if id:
+                item = ScrapingItem.objects.get(id=id)
+                serializer = ScrapingSerializer(item)
+                return Response({ "data": serializer.data}, status=status.HTTP_200_OK)
+            queryset = ScrapingItem.objects.all()
+            serializer = ScrapingSerializer(queryset, many=True)
+            return Response({"data": serializer.data}, status=status.HTTP_200_OK)
 
 class EventsView(generics.RetrieveAPIView):
     queryset = CalendarEvents.objects.all()

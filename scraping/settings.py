@@ -12,6 +12,12 @@ BOT_NAME = 'scraping'
 SPIDER_MODULES = ['scraping.spiders']
 NEWSPIDER_MODULE = 'scraping.spiders'
 
+import sys
+sys.path.append('/fitness_project')
+import os
+os.environ['DJANGO_SETTINGS_MODULE'] = 'fitness_project.settings'
+import django
+django.setup()
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'scraping (+http://www.yourdomain.com)'

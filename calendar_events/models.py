@@ -3,7 +3,13 @@ from django.db import models
 from django.urls import reverse
 
 
-
+class ScrapingItem(models.Model):
+    # define the fields for your item here like:
+    title = models.CharField(max_length=255)
+    link = models.URLField(blank=True)
+    category = models.CharField(blank=True, max_length=255)
+    img = models.ImageField()
+    
 
 class CalendarEvents(models.Model):
     name = models.CharField(max_length=255)

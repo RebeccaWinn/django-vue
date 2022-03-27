@@ -35,13 +35,14 @@ class FitnessWorkoutSpider(scrapy.Spider):
     name = "workouts"
     #add in the categories
     def start_requests(self):
-        url = 'https://www.muscleandfitness.com/workouts/shoulder-exercises/'
+        url = 'https://www.muscleandfitness.com/workouts/arms/'
         yield scrapy.Request(url, self.parse)
         #yield scrapy.Request(f'https://www.muscleandfitness.com/workout-routines/{self.category}')
     def parse(self,response):
         workouts = response.css('.l-main__content .article')
         for article in workouts:
             item = ScrapingItem()
+            item['category'] = "arms"
             item['title'] = article.css('h3 a::text').extract()
             item['link'] = article.css('.article__title a::attr(href)').extract_first()
             item['img'] = article.css('div img::attr(src)').extract_first()

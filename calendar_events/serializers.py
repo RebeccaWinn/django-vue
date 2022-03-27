@@ -1,6 +1,12 @@
 from rest_framework import serializers
-from .models import CalendarEvents,Reminders
+from .models import CalendarEvents,Reminders,ScrapingItem
 
+
+class ScrapingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ScrapingItem
+        fields = '__all__'
+        
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
