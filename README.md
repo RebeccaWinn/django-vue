@@ -5,7 +5,7 @@
 
 ## Calendar Page
 
--Click on date to add workout 
+-Click on date to add workout instead of the button click with manual input date
 
 -Delete and update automatic reminders with calendar events
 
