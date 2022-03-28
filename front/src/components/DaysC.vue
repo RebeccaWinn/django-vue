@@ -1,5 +1,9 @@
 <template>
     <v-container style="margin-top:100px">
+        <v-alert v-if="alert == true"
+            type="success"
+            dismissible
+        >{{added_alert}}</v-alert>
         <v-row class="mt-5">
         <v-col cols="2">
             <v-sheet rounded="lg">
@@ -81,30 +85,14 @@
                 </v-card>
                 </v-dialog>
             </v-row>
-                <v-list-item
-                v-for="n in 5"
-                :key="n"
-                link
-                >
-                <v-list-item-content>
-                    <v-list-item-title>
-                    List Item {{ n }}
-                    </v-list-item-title>
-                </v-list-item-content>
-                </v-list-item>
-
-                <v-divider class="my-2"></v-divider>
-
-                <v-list-item
-                link
-                color="grey lighten-4"
-                >
-                <v-list-item-content>
-                    <v-list-item-title>
-                    Refresh
-                    </v-list-item-title>
-                </v-list-item-content>
-                </v-list-item>
+              
+                <v-switch class="pt-4 ma-3"
+                    v-model="automatic_reminder"
+                    label="Automatic reminders"
+                    color="primary"
+                    hide-details
+                ></v-switch>
+      
             </v-list>
             </v-sheet>
         </v-col>
@@ -259,6 +247,7 @@
     export default {
         name:'DaysCalendar',
         data: () => ({
+            automatic_reminder:true,
             APIData:[],
             drawer: null,
             update:false,
@@ -271,6 +260,8 @@
                 day: 'Day',
                 '4day': '4 Days',
             },
+            alert:false,
+            added_alert:"",
             selectedEvent: {},
             selectedElement: null,
             selectedOpen: false,
@@ -322,6 +313,7 @@
                     console.log(error)
                 })
             },
+         
             getEventColor (event) {
                 return event.color
             },
@@ -358,10 +350,22 @@
                 }).then(response => {
                     this.getEvents()
                     console.log(response)
-                    console.log(this.new_start)
+                    this.added_alert= this.workout +" workout added to Calendar"
+                    this.alert = true
                 }).catch(error => {
                     console.log(error)
                 })
+                if(this.automatic_reminder == true) {
+                    getAPI.post('/reminders/',{
+                        title: this.workout +' reminder',
+                        description: 'automatic reminder',
+                        time: new Date(this.new_start),
+                    }).then(response => {
+                        console.log(response)
+                    }).catch(error => {
+                        console.log(error)
+                    })
+                }
             },
             deleteWorkout(id){
                 getAPI.delete('/events/'+id)
@@ -372,6 +376,7 @@
                         console.log(error.response)
                     })
                 this.getEvents();
+             
             },
             updateWorkout(id){
                 getAPI.patch('/events/'+id,{

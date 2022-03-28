@@ -1,5 +1,12 @@
 <template>
         <v-container style="margin-top:100px;"> 
+        <v-alert v-if="alert == true"
+            type="success"
+            dismissible
+          >{{reminder_alert}}</v-alert>
+        <v-card class="pa-4 mb-3">
+          <h2  class="text-center">Workout Reminders</h2>
+        </v-card>
           <v-row>
             <v-col
               cols="12"
@@ -12,7 +19,7 @@
                 class="pa-5"
               >
               
-              <div>Add Reminder</div>
+              <div>Add Custom Reminder</div>
                <v-text-field
                   label="title*"
                   v-model="new_title"
@@ -116,7 +123,7 @@
                 <v-card-text>{{reminder.description}}</v-card-text>
                 </div>
                 <v-spacer></v-spacer>
-                  <v-btn icon @click= "reminder.title = updated_title; reminder.description = updated_description; dialog = true; id = reminder.id; ">
+                  <v-btn icon @click= "updated_title = reminder.title; updated_description =reminder.description ; dialog = true; id = reminder.id; ">
                   <v-icon>mdi-pencil</v-icon>
                   </v-btn>
                  <v-btn icon>
@@ -134,7 +141,8 @@
         </v-container>
 </template>
 <script>
-    import{ getAPI } from '../axios-api'
+
+  import{ getAPI } from '../axios-api'
     export default {
       data:() => ({
           new_title:"",
@@ -147,6 +155,9 @@
           updated_time:"",
           APIData:"",
           reminders:[],
+          events:[],
+          alert:false,
+          reminder_alert:"",
  
           id:"",
           time_open:false,
@@ -159,7 +170,9 @@
       created(){
         this.getReminders()
       },
+
       methods:{
+  
         getReminders(){
            const reminders = []
                 getAPI.get('/reminders/')
@@ -171,8 +184,10 @@
                             id:this.APIData.data[i].id,
                             title:this.APIData.data[i].title,
                             description:this.APIData.data[i].description,
-                            time:this.APIData.data[i].time,
+                            time:new Date(this.APIData.data[i].time),
                         })
+                    this.checkReminders(new Date(this.APIData.data[i].time),this.APIData.data[i].title,this.APIData.data[i].description)
+                  
                     }
                 })
                 .catch(error => {
@@ -181,8 +196,16 @@
                 this.reminders = reminders
 
 
-
         },
+        checkReminders(time,title,description){
+          let d = new Date();
+            if (time.getDay() == d.getDay()){
+              this.reminder_alert = title + ' : Get to the gym - ' + description 
+              this.alert = true
+            }
+        },
+
+
         postReminder(){
           getAPI.post('/reminders/',{
                   title: this.new_title,
@@ -198,6 +221,7 @@
               this.new_date=""
               this.new_time=""
             this.getReminders()
+
 
         },
         deleteReminder(id){
