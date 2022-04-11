@@ -3,12 +3,6 @@
 
 ## Todo
 
-## Calendar Page
-
--Click on date to add workout instead of the button click with manual input date
-
--Delete and update automatic reminders with calendar events
-
 ## Reminder Page
 
 -Reminders for muscle groups that haven’t been worked out in awhile according to calendar events. 
@@ -17,12 +11,11 @@
 
 -Connect reminders to SMS notifications instead
 
-## Recommended Page
-
--Saving Images
-
--Continually gathering data and resetting database for the articles scraped
 
 ## Calculator Page
 
 -Macro calculator (researching needed)
+
+## Posts Page 
+
+-Get users working and then posts with categories. 
