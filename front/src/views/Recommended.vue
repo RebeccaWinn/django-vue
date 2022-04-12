@@ -20,32 +20,27 @@
       </v-col>
     </v-card>
     <v-row>
+       <v-card
+          width="65%"
+          class="mx-auto mt-5"
+  
+        >
       <template >
         <v-col v-for="item in categoryItems"
           :key="item.id"
-          cols="6"
-          md="4"
-          class="mt-5 pb-0"
-
+          class="mt-3 pb-0"
         >
-        <v-card
-          
-          class="mx-auto"
-          max-width="500"
-        >
-        <a :href="item.link" target="_blank">
-          <v-img
-            src="../assets/gym2.jpg"
-            height="200px"
-          ></v-img>
 
-          <v-card-title>
+        <a :href="item.link" target="_blank" style="decoration: none;color:black;">
+
+          <h3>
           {{item.title}}
-          </v-card-title>
+          </h3>
         </a>
-        </v-card>
+        <v-divider class="mt-2 mb-2"></v-divider>
           </v-col>
       </template>
+        </v-card>
     </v-row>
   </v-container>
 </template>
@@ -57,7 +52,7 @@
       APIData:"",
       items:[],
       title:"",
-      categories:['arms','abs','shoulders'],
+      categories:['arms','abs','shoulders','legs','back','chest','full-body','tips'],
       selectedCategories:[],
       categoryItems:[],
 

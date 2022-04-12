@@ -24,8 +24,9 @@
                     </v-btn>
                 </template>
                 <v-card>
+                
                     <v-card-title>
-                    <span class="text-h5">Add workout</span>
+                    <span class="text-h5">Add workout</span> 
                     </v-card-title>
                     <v-card-text>
                     <v-container>
@@ -186,7 +187,7 @@
                     :type="type"
                     @click:event="showEvent"
                     @click:more="viewDay"
-                    @click:date="viewDay"
+                    @click:date="add"
                     @change="getEvents"
                 ></v-calendar>
                 <v-menu
@@ -205,7 +206,7 @@
                         dark
                     >
                         <v-btn icon
-                            @click= "workout=selectedEvent.name;update= true; dialog = true;"
+                            @click= "workout=selectedEvent.name;update= true; dialog = true; new_start = selectedEvent.start"
                          >
 
                         <v-icon>mdi-pencil</v-icon>
@@ -270,8 +271,12 @@
             names: ['Shoulders', 'Biceps/Triceps', 'Back', 'Chest', 'Glutes', 'Quads', 'Cardio'],  
             workout: "",
             new_start: "",
+            new_date: [],
+            day_new:"",
+            month_new:"",
             reminder:"reminder",
-            dialog:false
+            dialog:false,
+            checkreminders:[],
         }),
     
         mounted () {
@@ -288,13 +293,27 @@
                 this.focus = date
                 this.type = 'day'
             },
+            add({date}){
+                this.workout = ""
+                console.log(date)
+                this.new_date= date.split("-")
+                this.day_new = this.new_date[2]
+                if(this.day_new[0] == "0"){
+                    this.day_new = this.day_new.slice(1)
+                }
+                this.month_new = this.new_date[1]
+                if(this.month_new[0] == "0"){
+                    this.month_new = this.month_new.slice(1)
+                }
+                this.new_start = new Date(this.month_new+'/'+this.day_new+'/'+this.new_date[0])      
+                this.dialog = true
+            },
             getEvents(){
                 const events = []
                 getAPI.get('/events/')
                 .then(response => {
                     console.log('Calendar Events Api has recieved data')
                     this.APIData = response.data
-                    console.log(this.APIData)
                     for (let i = 0; i < this.APIData.data.length; i++) {
                         const start_time = this.APIData.data[i].start.replace('T', ' ');
                         const end_time = this.APIData.data[i].end.replace('T', ' ');
@@ -349,33 +368,60 @@
                     end: this.new_start,
                 }).then(response => {
                     this.getEvents()
+                    console.log(response.data.data.id)
+                    if(this.automatic_reminder == true) {
+                        getAPI.post('/reminders/',{
+                            title: this.workout +' reminder',
+                            description: 'automatic reminder',
+                            time: new Date(this.new_start),
+                            event_id :response.data.data.id
+                            
+                        }).then(res => {
+                            console.log(res)
+                        }).catch(error => {
+                            console.log(error)
+                        })
+                    }
+                    
                     console.log(response)
                     this.added_alert= this.workout +" workout added to Calendar"
                     this.alert = true
+                    this.new_start = ""
+                    this.workout = ""
                 }).catch(error => {
                     console.log(error)
                 })
-                if(this.automatic_reminder == true) {
-                    getAPI.post('/reminders/',{
-                        title: this.workout +' reminder',
-                        description: 'automatic reminder',
-                        time: new Date(this.new_start),
-                    }).then(response => {
-                        console.log(response)
-                    }).catch(error => {
-                        console.log(error)
-                    })
-                }
+               
             },
-            deleteWorkout(id){
-                getAPI.delete('/events/'+id)
+    
+            deleteWorkout(id_selected){
+                getAPI.delete('/events/'+id_selected)
                     .then(response => {
+                        this.getEvents();
                         console.log(response);
                     })
                     .catch(function (error) {
                         console.log(error.response)
-                    })
-                this.getEvents();
+                })
+                getAPI.get('/reminders/')
+                .then(response => {
+                        console.log("reminders"+response.data.data)
+                    for(let i = 0; i < response.data.data.length; i++) {
+                        if (response.data.data[i].event_id == id_selected){
+                            getAPI.delete('/reminders/'+ response.data.data[i].id)
+                            .then(response => {
+                                console.log("reminders"+response);
+                            })
+                            .catch(function (error) {
+                                console.log(error.response)
+                            })
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+            
              
             },
             updateWorkout(id){
@@ -384,16 +430,17 @@
                     start: this.new_start,
                     end: this.new_start,
                 }).then(response => {
+                    this.getEvents();
                     console.log(id)
                     console.log(response);
                 }).catch(function (error) {
                     console.log(error.response)
                 })
-                this.getEvents();
             },
             rnd (a, b) {
                 return Math.floor((b - a + 1) * Math.random()) + a
             },
-        },
+
+        }
     }
 </script>

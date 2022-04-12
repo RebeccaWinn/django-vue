@@ -35,14 +35,14 @@ class FitnessWorkoutSpider(scrapy.Spider):
     name = "workouts"
     #add in the categories
     def start_requests(self):
-        url = 'https://www.muscleandfitness.com/workouts/arms/'
+        url = 'https://www.muscleandfitness.com/workouts/full-body/'
         yield scrapy.Request(url, self.parse)
         #yield scrapy.Request(f'https://www.muscleandfitness.com/workout-routines/{self.category}')
     def parse(self,response):
         workouts = response.css('.l-main__content .article')
         for article in workouts:
             item = ScrapingItem()
-            item['category'] = "arms"
+            item['category'] = "full-body"
             item['title'] = article.css('h3 a::text').extract()
             item['link'] = article.css('.article__title a::attr(href)').extract_first()
             item['img'] = article.css('div img::attr(src)').extract_first()
@@ -55,12 +55,14 @@ class FitnessTipsSpider(scrapy.Spider):
         url = 'https://www.muscleandfitness.com/workouts/workout-tips/'
         yield scrapy.Request(url, self.parse)
     def parse(self,response):
-        for article in response.css('.l-main__content .article'):
-            yield {
-                'title':article.css('h3 a::text').get(),
-                'img':article.css('div img').get(),
-            }
-    
+        workouts = response.css('.l-main__content .article')
+        for article in workouts:
+            item = ScrapingItem()
+            item['category'] = "tips"
+            item['title'] = article.css('h3 a::text').extract()
+            item['link'] = article.css('.article__title a::attr(href)').extract_first()
+            item['img'] = article.css('div img::attr(src)').extract_first()
+            yield item
 class FitnessTipsAndWorkoutsSpider(scrapy.Spider):
     name = "moreworkouts"
     def start_requests(self):

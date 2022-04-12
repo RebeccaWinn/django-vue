@@ -212,6 +212,7 @@
                   description: this.new_description,
                   time: this.new_date + " " +this.new_time ,
               }).then(response => {
+                  this.getReminders()
                   console.log(response)
               }).catch(error => {
                   console.log(error)
@@ -220,7 +221,6 @@
               this.new_description=""
               this.new_date=""
               this.new_time=""
-            this.getReminders()
 
 
         },
@@ -228,11 +228,12 @@
           getAPI.delete('/reminders/'+id)
                 .then(response => {
                     console.log(response);
+                    this.getReminders();
+
                 })
                 .catch(function (error) {
                     console.log(error.response)
                 })
-            this.getReminders();
 
         },
     
@@ -242,12 +243,12 @@
                   description: this.updated_description,
                   time: this.updated_date + " " +this.updated_time ,
                 }).then(response => {
+                    this.getReminders();
                     console.log(id)
                     console.log(response);
                 }).catch(function (error) {
                     console.log(error.response)
                 })
-                this.getReminders();
 
         }
       }
