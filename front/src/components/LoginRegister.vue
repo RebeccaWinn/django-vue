@@ -1,6 +1,6 @@
 <template>
- <v-container center v-model="dialog" style="width: 50%;padding-top:80px;" persistent max-width="90%" min-width="360px">
-          <v-tabs v-model="tab" show-arrows background-color="blue darken-1" icons-and-text dark grow>
+ <v-container center class="app_n" v-model="dialog" style="width: 50%;padding-top:120px;" persistent max-width="90%" min-width="360px">
+          <v-tabs v-model="tab" show-arrows background-color="cyan darken-1" icons-and-text dark grow>
             <v-tabs-slider color="blue lighten-3"></v-tabs-slider>
             <v-tab v-for="i in tabs" :key="i">
               <v-icon large>{{ i.icon }}</v-icon>

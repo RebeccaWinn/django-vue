@@ -1,5 +1,5 @@
 <template>
-        <v-container style="margin-top:100px;"> 
+        <v-container class="app_n" style="margin-top:100px;"> 
         <v-alert v-if="alert == true"
             type="success"
             dismissible
@@ -256,3 +256,10 @@
 
     }
 </script>
+<style>
+@import url("https://fonts.googleapis.com/css?family=Questrial");
+
+  .app_n{
+    font-family: "Questrial";
+  }
+ </style>

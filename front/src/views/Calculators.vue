@@ -1,5 +1,5 @@
 <template>
-<v-container style="margin-top:140px">
+<v-container class="app_n" style="margin-top:140px">
 <v-row>
  
   
@@ -245,3 +245,10 @@
     },
   }
 </script>
+<style>
+@import url("https://fonts.googleapis.com/css?family=Questrial");
+
+  .app_n{
+    font-family: "Questrial";
+  }
+ </style>

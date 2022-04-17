@@ -1,4 +1,4 @@
-<template>
+<template class="app_n">
     <v-container style="margin-top:100px">
         <v-alert v-if="alert == true"
             type="success"
@@ -444,3 +444,10 @@
         }
     }
 </script>
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap');
+  .app_n{
+    font-family: 'Oswald', sans-serif;
+  }
+ </style>

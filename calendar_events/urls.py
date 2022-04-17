@@ -1,5 +1,6 @@
 from django.urls import path
-from . views import EventsView, RemindersView,ScrapingView
+
+from . views import EventsView, RemindersView,ScrapingView,PostsView
 
 
 urlpatterns = [
@@ -8,6 +9,9 @@ urlpatterns = [
     path('reminders/', RemindersView.as_view()),
     path('reminders/<int:id>', RemindersView.as_view()),
     path('scraping/', ScrapingView.as_view()),
+    path('posts/', PostsView.as_view()),
+    path('posts/<int:id>', PostsView.as_view()),
+
 
 
 ]

@@ -1,23 +1,17 @@
 <template>
-  <v-container style="margin-top:70px"> 
+  <v-container class="app_n" style="margin-top:70px"> 
 
   <v-card class="pt-4 pb-0">
-  <h2 class="text-center">Recommended Workouts and Tips</h2>
-
-      <v-col
-        cols="12"
-        sm="12"
-      >
+  <h2 class="text-center mb-4">Recommended Workouts and Tips</h2>
         <v-select
           v-model="selectedCategories"
           :items="categories"
           @change="sortCategories"
           label="Categories"
-          multiple
-          outlined
+          dense
+          filled
         ></v-select>
-
-      </v-col>
+    
     </v-card>
     <v-row>
        <v-card
@@ -105,3 +99,10 @@
 
 
 </script>
+<style>
+@import url("https://fonts.googleapis.com/css?family=Questrial");
+
+  .app_n{
+    font-family: "Questrial";
+  }
+ </style>

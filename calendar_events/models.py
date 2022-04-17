@@ -24,16 +24,16 @@ class Meta:
     # def get_absolute_url(self):
     #     return reverse ('calendar-details',kwargs={'pk': self.pk})    
     
-    
-    
 class Reminders(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(max_length=255)
     time = models.CharField(max_length=255)
-    event_id = models.IntegerField()
+    event_id = models.IntegerField(null=True, blank=True)
     
     def __str__(self):
         return self.name 
-    
+class Posts(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField(max_length=1000)
     # def get_absolute_url(self):
     #     return reverse ('reminder-details',kwargs={'pk': self.pk})    

@@ -4,9 +4,39 @@ from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import status
-from . models import CalendarEvents, Reminders,ScrapingItem
-from . serializers import EventSerializer, ReminderSerializer, ScrapingSerializer
+from . models import CalendarEvents, Reminders,ScrapingItem,Posts
+from . serializers import EventSerializer, ReminderSerializer, ScrapingSerializer, PostsSerializer
 
+class PostsView(generics.RetrieveAPIView):
+    queryset = Posts.objects.all()
+    def get(self, request,id=None):
+            if id:
+                item = Posts.objects.get(id=id)
+                serializer = PostsSerializer(item)
+                return Response({ "data": serializer.data}, status=status.HTTP_200_OK)
+            queryset = Posts.objects.all()
+            serializer = PostsSerializer(queryset, many=True)
+            return Response({"data": serializer.data}, status=status.HTTP_200_OK)
+    def post(self, request, *args, **kwargs):
+        serializer = PostsSerializer(data= request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({ "data": serializer.data}, status=status.HTTP_200_OK)
+        else:
+            return Response({"status": "error", "data": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+    def patch(self, request, id=None):
+        item = Posts.objects.get(id=id)
+        serializer = PostsSerializer(item, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"data": serializer.data}, status=status.HTTP_200_OK)
+        else:
+            return Response({"data": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, id=None):
+        item = get_object_or_404(Posts, id=id)
+        item.delete()
+        return Response({"data": "Item Deleted"})
 
 
 class ScrapingView(generics.RetrieveAPIView):

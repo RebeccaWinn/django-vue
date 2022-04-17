@@ -15,3 +15,10 @@ export default {
   },
 };
 </script>
+<style>
+@import url("https://fonts.googleapis.com/css?family=Questrial");
+
+  .app_n{
+    font-family: "Questrial";
+  }
+ </style>
