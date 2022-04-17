@@ -11,3 +11,10 @@
 
 
 
+## Calculator Page
+
+-Macro calculator (researching needed)
+
+## Posts Page 
+
+-Get users working and then posts with categories. 
