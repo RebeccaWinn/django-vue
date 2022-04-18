@@ -4,10 +4,11 @@
       app
       color="white"
       flat 
+      height="85%"
       >
-      <v-container class="py-0 fill-height mt-8 mb-8">
+      <v-container class="py-0 fill-height mt-5 mb-5">
         <v-row >
-        <v-img src="./assets/logo_fi.png" style="max-width:70px;"></v-img>
+        <v-img src="./assets/logo_fi.png" style="max-width:65px;"></v-img>
         <h2 class="mt-5 ml-3 app_n" >Workout Planner</h2>
             <v-spacer></v-spacer>
 

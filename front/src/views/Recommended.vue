@@ -1,5 +1,5 @@
 <template>
-  <v-container class="app_n" style="margin-top:70px"> 
+  <v-container class="app_n" style="margin-top:100px"> 
 
   <v-card class="pt-4 pb-0">
   <h2 class="text-center mb-4">Recommended Workouts and Tips</h2>
