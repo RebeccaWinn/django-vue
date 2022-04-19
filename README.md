@@ -1,20 +1,10 @@
 # Fitness_Project
 
 
-## Todo
+## Start Server 
+python3 manage.py runserver 
 
-## Reminder Page
+## Start FrontEnd 
+npm run serve 
 
--Reminders for muscle groups that haven’t been worked out in awhile according to calendar events. 
-
--Input times you’re busy during the week so it can remind you when you should get to the gym. 
-
-
-
-## Calculator Page
-
--Macro calculator (researching needed)
-
-## Posts Page 
-
--Get users working and then posts with categories. 
+localhost:8080
